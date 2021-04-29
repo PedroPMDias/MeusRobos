@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+.caixa {
+    height: 100vh;
+    width: 100vh;
+}
+
+.cor1 {
+    background-color: blue;
+}
+
+.cor2 {
+    background-color: green;
+}
