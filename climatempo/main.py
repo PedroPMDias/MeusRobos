@@ -1,7 +1,7 @@
 from api_robot.arquivos import Arquivista
 from api_robot.internet import Navegador
 import os
-#from api_robot.modelador import something
+from api_robot.modelador import something
 
 local_c, local_e = "rio de janeiro", "rj"
 
