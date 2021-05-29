@@ -25,3 +25,5 @@ def escrever_previsoes(servidor=interno, internet=externo):
                 print(url_file)
 
 escrever_previsoes()
+
+something()
