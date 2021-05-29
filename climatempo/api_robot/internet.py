@@ -3,45 +3,47 @@ from bs4 import BeautifulSoup
 
 class Navegador():
     def __init__(self, cidade, estado):
-        self.cid = cidade.title().replace(' ', '+')
-        self.est = estado.upper()
-        self.sufixo = str(f"{self.cid}-{self.est}").lower()
-        self.url_google = str(f"https://www.google.com/search?q='previsao+climatempo'+{self.sufixo}")
-    
-    def agrupador(self, grupo):
-        previsoes = {self.est: {self.cid: {}}}
+        self._sufixo = str(cidade + '-' + estado).replace(' ', '')
+        self._url_google = str(f"https://www.google.com/search?q=previsao+climatempo+{self._sufixo}/").lower()
+        self._cidade = cidade.title()
+        self._estado = estado.upper()
+
+    def _agrupador(self, grupo):
+        previsoes = {self._estado: {self._cidade: {}}}
         for link in grupo:
             fatia = link.split('/')[4].replace('-', ' ')
             if fatia == 'cidade':
-                name = str(f"Previsao do tempo hoje em {self.cid} - {self.est} _ Climatempo.html")
+                name = str(f"Previsao do tempo hoje em {self._cidade} - {self._estado} _ Climatempo.html")
             else:
-                name = str(f"Previsao do tempo {fatia} em {self.cid} - {self.est} _ Climatempo.html")
-            previsoes[self.est][self.cid][name] = link
+                name = str(f"Previsao do tempo {fatia} em {self._cidade} - {self._estado} _ Climatempo.html")
+            previsoes[self._estado][self._cidade][name] = link
         return previsoes
 
-    def limpeza(self, lista_urls):
-        if len(lista_urls) != 5:
-            raspas = lista_urls[0].split('/')
-            for radical in ('/agora/', '/', '/amanha/', '/fim-de-semana/', '/15-dias/'):
-                rdcl = str(f"{raspas[0]}//{raspas[2]}/{raspas[3]}" + radical + f"{raspas[-3]}/{raspas[-2]}/{raspas[-1]}")
-                if rdcl not in lista_urls:
-                    lista_urls.append(rdcl)
-            return self.agrupador(lista_urls)
-        else:
-            return self.agrupador(lista_urls)
+    def _limpeza(self, lista_urls):
+        fatia = lista_urls[0].split('/')
+        radicais = ('/agora/', '/', '/amanha/', '/fim-de-semana/', '/15-dias/')
+        for rdcl in radicais:
+            radical = str(f"{fatia[0]}//{fatia[2]}/{fatia[3]}" + rdcl + f"{fatia[-3]}/{fatia[-2]}/{fatia[-1]}")
+            if radical not in lista_urls:
+                lista_urls.append(radical)
+        return self._agrupador(lista_urls)
     
-    def filtrar_tags(self, tags_a):
-        href_bruto = list(map(lambda bruto: str(bruto.get('href')), tags_a))
+    def _filtrar_tags(self, href_bruto, hrefs = []):
         href_limpo = list(map(lambda limpo: limpo.split('=')[1][:-3] if limpo.startswith('/url') else '', href_bruto))
-        hrefs = []
-        for limpo in href_limpo:
-            if limpo.endswith(self.sufixo) and ('/vento/' not in limpo) and ('/climatologia/' not in limpo):
-                hrefs.append(limpo)
-        return self.limpeza(hrefs)
+        for href in href_limpo:
+            if href.endswith(self._sufixo):
+                if ('/vento/' not in href) and ('/climatologia/' not in href):
+                    hrefs.append(href)
+        return self._limpeza(list(set(hrefs)))
 
-    def raspar_google(self):
-        pagina = requests.get(self.url_google)
-        filtro = BeautifulSoup(pagina.text, 'lxml')
-        main = filtro.find('div', {'id': 'main'})
-        tags = list(main.findAll('a'))
-        return self.filtrar_tags(tags)
+    def get_urls(self):
+        try:
+            pagina = requests.get(self._url_google)
+            filtro = BeautifulSoup(pagina.text, 'lxml')
+        except:
+            return False
+        else:
+            tags_a = filtro.find('div', {'id': 'main'}).findAll('a')
+            href = list(map(lambda bruto: str(bruto.get('href')), tags_a))
+            return self._filtrar_tags(href)
+    
