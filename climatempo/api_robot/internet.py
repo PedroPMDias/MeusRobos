@@ -36,14 +36,26 @@ class Navegador():
                     hrefs.append(href)
         return self._limpeza(list(set(hrefs)))
 
+    def paginador(self, url):
+        pagina = requests.get(url)
+        return BeautifulSoup(pagina.text, 'lxml')
+
     def get_urls(self):
         try:
-            pagina = requests.get(self._url_google)
-            filtro = BeautifulSoup(pagina.text, 'lxml')
+            html = self.paginador(self._url_google)
         except:
-            return False
+            return None
         else:
-            tags_a = filtro.find('div', {'id': 'main'}).findAll('a')
+            tags_a = html.find('div', {'id': 'main'}).findAll('a')
             href = list(map(lambda bruto: str(bruto.get('href')), tags_a))
             return self._filtrar_tags(href)
     
+    def download(self, link, this_file):
+        with open(this_file, 'w') as file_html:
+            previsao = str(requests.get(link).text)
+            try:
+                file_html.write(previsao)
+            except Exception as r:
+                return r
+            else:
+                return file_html.name
