@@ -1,1 +1,2 @@
-print('modelador')
+def something():
+    print('modelador')
