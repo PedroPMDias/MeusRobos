@@ -8,6 +8,10 @@ class Arquivista():
         self._biblioteca = str(os.path.dirname(os.path.realpath(__file__))).replace('api_robot', 'biblioteca')
         self._climatempo = self._biblioteca + '/climatempo.json'
         self.dir_previsoes = self._biblioteca.replace('biblioteca', 'Previsoes')
+        if not os.path.exists(str(f"{self.dir_previsoes}/{self.estate}/{self.city}/")):
+            os.mkdir(str(f"{self.dir_previsoes}/"))
+            os.mkdir(str(f"{self.dir_previsoes}/{self.estate}/"))
+            os.mkdir(str(f"{self.dir_previsoes}/{self.estate}/{self.city}/"))
 
     def get_urls(self):
         urls = json.load(open(self._climatempo, 'r'))
