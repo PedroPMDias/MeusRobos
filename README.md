@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    
+    <head></head>
     <body>
         <div class="jumbotron jumbotron-fluid">
             <div class="container text-white bg-info">
