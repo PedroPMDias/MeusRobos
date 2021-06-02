@@ -2,7 +2,7 @@ from API.Servidor import Arquivista as api_in
 from API.Web import Navegador as api_out
 import os
 
-local_c, local_e = "colombo", "pr"
+local_c, local_e = "curitiba", "pr"
 
 servidor = api_in(cidade=local_c, estado=local_e)
 web = api_out(cidade=local_c, estado=local_e)
@@ -17,7 +17,7 @@ def baixar_previsoes():
     for estado, est_key in links_salvos.items():
         for cidade, cid_key in est_key.items():
             for nome, url in cid_key.items():
-                endereco = str(f"{pasta}/{estado}/{cidade}/{nome}")
+                endereco = str(f"{pasta}/{estado}_{cidade}/{nome}")
                 if not os.path.exists(endereco):
                     print("\nBaixado ->", web.download(url, endereco))
                 else:
