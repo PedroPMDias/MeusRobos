@@ -9,6 +9,7 @@ web = api_out(cidade=local_c, estado=local_e)
 
 def baixar_previsoes():
 
+    caminhos = []
     links = servidor.pegar_urls() if servidor.pegar_urls() != {} else web.pegar_urls()
 
     links_salvos = servidor.salvar_urls(links)
@@ -19,10 +20,12 @@ def baixar_previsoes():
             for nome, url in cid_key.items():
                 endereco = str(f"{pasta}/{estado}_{cidade}/{nome}")
                 if not os.path.exists(endereco):
-                    print("\nBaixado ->", web.download(url, endereco))
+                    caminhos.append(web.download(url, endereco))
                 else:
                     nomes = endereco.split('/')
                     nome_relativo = f"../{nomes[-5]}/{nomes[-4]}/{nomes[-3]}/{nomes[-2]}/{nomes[-1]}"
-                    print("\nLocalizado ->", nome_relativo)
+                    caminhos.append(nome_relativo)
+    return caminhos
 
-baixar_previsoes()
+downloads = baixar_previsoes()
+print(downloads)
