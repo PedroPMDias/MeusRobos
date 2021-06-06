@@ -1,9 +1,9 @@
-import requests, os
+import requests
 from bs4 import BeautifulSoup as bs4
 
 class Frontend():
     def __init__(self, lugar):
-        self.chave = str(lugar).replace('/', '-').replace(' ', '').lower()
+        self.sufixo = str(lugar).replace('/', '-').replace(' ', '').lower()
         self.busca = str(f"climatempo {lugar}").replace('/', ' ')
         self.google = str(f"https://www.google.com/search?q={self.busca}").replace(' ', '+')
 
@@ -13,14 +13,15 @@ class Frontend():
             pagina = bs4(html.content, 'lxml')
             tags = pagina.find_all('a')
         
-        hrefs = list(map(lambda tag: tag.attrs.get('href'), tags))
-        href_bruto = list(filter(lambda bruto: bruto.startswith('/url'), hrefs))
+        href = list(map(lambda tag: tag.attrs.get('href'), tags))
+        href_bruto = list(filter(lambda bruto: bruto.startswith('/url'), href))
         href_limpo = list(map(lambda limpo: limpo.split('=')[1][:-3], href_bruto))
-        urls = list(filter(lambda url: url.endswith(self.chave), href_limpo))
+        urls = list(filter(lambda url: url.endswith(self.sufixo), href_limpo))
+        urls.sort()
 
         return urls
     
-    def completar_urls(self):
+    def trazer_urls(self):
         links = self.pesquisar_urls()
         linkT = links[0].split('/')
         
@@ -29,10 +30,19 @@ class Frontend():
             if url not in links:
                 links.append(url)
         
-        return links
+        return list(set(links))
+
+    def pegar_titulos(self, links):
+        titulos = {}
+        for link in links:
+            pagina = requests.get(link)
+            if (pagina.status_code == 200) and (pagina.ok == True):
+                html = bs4(pagina.content, 'lxml')
+                titulos[html.h1.text] = link
+        return titulos
+
 
 """
 front = Frontend('Rio de Janeiro/RJ')
-clima = front.completar_urls()
-print(clima)
+print(front.trazer_urls())
 """
