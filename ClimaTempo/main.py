@@ -23,7 +23,7 @@ def baixar_previsoes():
                     caminhos.append(web.download(url, endereco))
                 else:
                     nomes = endereco.split('/')
-                    nome_relativo = f"../{nomes[-5]}/{nomes[-4]}/{nomes[-3]}/{nomes[-2]}/{nomes[-1]}"
+                    nome_relativo = str(f"../{nomes[-5]}/{nomes[-4]}/{nomes[-3]}/{nomes[-2]}/{nomes[-1]}")
                     caminhos.append(nome_relativo)
     return caminhos
 

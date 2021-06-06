@@ -1,26 +1,33 @@
 import json, os
 
 class Backend():
-    def __init__(self):
-        self.pasta_Registros = str(os.path.dirname(os.path.realpath(__file__))).replace('API', 'Registros')
+    def __init__(self, local):
+        self.chavedojson = local.replace('/', '_').replace(' ', '')
+        self.pasta = str(os.path.dirname(os.path.realpath(__file__)))
+        self.pasta_Registros = self.pasta.replace('API', 'Registros')
         self.historico = self.pasta_Registros + '/historico.json'
-        #if not os.path.exists(self.pasta_Registros): os.mkdir(self.pasta_Registros)
+        if not os.path.exists(self.pasta_Registros):
+            os.mkdir(self.pasta_Registros)
+        self.pasta_Previsoes = self.pasta.replace('API', 'Previsoes')
+        if not os.path.exists(self.pasta_Previsoes):
+            os.mkdir(self.pasta_Previsoes)
 
-    def ler_json(self):
+    def lerJson(self):
         with open(self.historico, 'r') as jf:
             return json.load(jf)
     
-    def escrever_json(self, novoJson):
+    def escreverJson(self, novoJson):
         with open(self.historico, 'w') as jf:
             return json.dump(novoJson, jf, indent=4)
 
-    def climatizar(self, local):
-        cidade = local.split('/')[0]
-        estado = local.split('/')[-1]
-        leitura = self.ler_json()
+    def montarNovoJson(self, lista):
+        return {self.chavedojson: lista}
+
+    def trazer_urls(self):
+        leitura = self.lerJson()
 
         try:
-            urls = leitura[estado][cidade]
+            urls = leitura[self.chavedojson]
         except KeyError as ke:
             print(f"Não achei o local -> {ke}")
             return False
@@ -28,7 +35,6 @@ class Backend():
             return urls
 
 """
-lugar = "Rio de Janeiro/RJ"
-back = Backend()
-back.climatizar(lugar)
+back = Backend("Rio de Janeiro/RJ")
+print(back.trazer_urls())
 """
