@@ -1,35 +1,48 @@
-import json
-import os
+import json, os
 
-class Arquivista():
-    def __init__(self, cidade, estado):
-        self.cidade = cidade.title()
-        self.estado = estado.upper()
-        self._pasta_Localizacao = str(os.path.dirname(os.path.realpath(__file__))).replace('API', 'Localizacao')
-        self._json_Agenda = str(self._pasta_Localizacao + '/Agenda.json')
-        self.pasta_Downloads = str(self._pasta_Localizacao.replace('Localizacao', 'Downloads'))
+class Backend():
+    def __init__(self, lugar):
+        self.chavedojson = str(lugar.replace(' ', '').replace('/', '_')).title()
+        self.pasta = str(os.path.dirname(os.path.realpath(__file__)))
+        self.dir_Previsoes = self.pasta.replace('API', 'Previsoes')
+        self.dir_Registros = self.pasta.replace('API', 'Registros')
+        self.historico = self.dir_Registros + '/historico.json'
 
-    def criar_pastas(self):
-        if not os.path.exists(self.pasta_Downloads):
-            os.mkdir(self.pasta_Downloads)
-        
-        pasta_previsoes = self.pasta_Downloads + f"/{self.estado}_{self.cidade}"
-        if not os.path.exists(pasta_previsoes):
-            os.mkdir(pasta_previsoes)
+    def _titulacao(self, novoJson):
+        urlsNovas = novoJson.values()
+        for title, url in urlsNovas:
+            urlsNovas[str(f"{self.dir_Previsoes}/{title}")] = url
+            urlsNovas.pop(title)
+        return novoJson
 
-    def pegar_urls(self):
-        with open(self._json_Agenda, 'r') as arquivo:
+    def renovarUrls(self, novoLocal):
+        novoJson = self._titulacao(novoLocal)
+        with open(self.historico, 'w', encoding='utf-8') as arquivo:
+            json.dump(novoJson, arquivo, indent=4, ensure_ascii=False)
+        return novoJson
+
+    def pegarUrls(self):
+        with open(self.historico, 'r') as arquivo:
+            leitura = json.load(arquivo)
             try:
-                agenda = json.load(arquivo)
-            except json.decoder.JSONDecodeError:
-                return {}
+                urls = leitura[self.chavedojson]
+            except KeyError as ke:
+                print(f"Não achei o local -> {ke}. Mas vou baixar e renovar o conteudo todo")
+                return False
             else:
-                return agenda
+                print('Server found local ->', self.chavedojson)
+                return urls
 
-    def salvar_urls(self, novas_urls):
-        self.criar_pastas()
-        urls = self.pegar_urls()
-        urls.update(novas_urls)
-        with open(self._json_Agenda, 'w') as agenda:
-            json.dump(urls, agenda, indent=4)
-        return urls
+    def prever_arquivos(self, arquivos):
+        dir_local = self.dir_Previsoes + '/' + self.chavedojson
+        if not os.path.exists(self.dir_Previsoes):
+            os.mkdir(self.dir_Previsoes) and os.mkdir(dir_local)
+
+        chaves = arquivos.values()
+        for chave in chaves.keys():
+            if not os.path.exists(chave):
+                print(chave)
+"""
+back = Backend("Rio de Janeiro/RJ")
+print(back.pegarUrls())
+"""
