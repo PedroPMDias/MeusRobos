@@ -1,9 +1,9 @@
 {
-    "RiodeJaneiro_RJ": {
-        "Previsão do tempo para o fim de semana em Rio de Janeiro - RJ | Climatempo": "https://www.climatempo.com.br/previsao-do-tempo/fim-de-semana/cidade/321/riodejaneiro-rj",
-        "Previsão do tempo para amanhã em Rio de Janeiro - RJ | Climatempo": "https://www.climatempo.com.br/previsao-do-tempo/amanha/cidade/321/riodejaneiro-rj",
-        "Previsão do tempo para os próximos 15 dias em Rio de Janeiro - RJ | Climatempo": "https://www.climatempo.com.br/previsao-do-tempo/15-dias/cidade/321/riodejaneiro-rj",
+    "RIODEJANEIRO_RJ": {
         "Previsão do tempo agora em Rio de Janeiro - RJ | Climatempo": "https://www.climatempo.com.br/previsao-do-tempo/agora/cidade/321/riodejaneiro-rj",
-        "Previsão do tempo para hoje em Rio de Janeiro - RJ | Climatempo": "https://www.climatempo.com.br/previsao-do-tempo/cidade/321/riodejaneiro-rj"
+        "Previsão do tempo para o fim de semana em Rio de Janeiro - RJ | Climatempo": "https://www.climatempo.com.br/previsao-do-tempo/fim-de-semana/cidade/321/riodejaneiro-rj",
+        "Previsão do tempo para os próximos 15 dias em Rio de Janeiro - RJ | Climatempo": "https://www.climatempo.com.br/previsao-do-tempo/15-dias/cidade/321/riodejaneiro-rj",
+        "Previsão do tempo para hoje em Rio de Janeiro - RJ | Climatempo": "https://www.climatempo.com.br/previsao-do-tempo/cidade/321/riodejaneiro-rj",
+        "Previsão do tempo para amanhã em Rio de Janeiro - RJ | Climatempo": "https://www.climatempo.com.br/previsao-do-tempo/amanha/cidade/321/riodejaneiro-rj"
     }
 }
