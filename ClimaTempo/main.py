@@ -19,4 +19,4 @@ if not isinstance(dict_urls, dict):
 # Verificar a existencia dos arquivos
 print(front.download_html(back.existencia_arquivos(dict_urls)))
 
-'''Montar o html geral com todos os fragmentos'''
+'''###Montar o html geral com todos os fragmentos'''
