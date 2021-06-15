@@ -2,20 +2,21 @@
 from API.Servidor import Backend
 from API.Internet import Frontend
 
-# Cidade da busca
-lugar = "Rio de Janeiro/RJ" #lugar = "Rio das Ostras/RJ"
+# Cidade da busca ##lugar = "Rio das Ostras/RJ"
+lugar = "Rio de Janeiro/RJ"
 
 # Instaciando as classes
-back = Backend(lugar)
-front = Frontend(lugar)
+back, front = Backend(lugar), Frontend(lugar)
 
-# Iniciando o processador
-dict_urls = back.pegarUrls()
-if not dict_urls: dict_urls = front.pegarUrls()
+# Buscando no servidor
+dict_urls = back.pegar_Urls()
 
-urls_renovadas = back.renovarUrls(dict_urls) # Inspecionar esse cara aqui
-print(back.prever_arquivos(urls_renovadas))
+# Buscando na internet e salvando novo json
+if not isinstance(dict_urls, dict):
+    back.renovarUrls(front.pegar_Urls())
+    dict_urls = back.pegar_Urls()
 
-'''
-Monte o html geral com todos os fragmentos
-'''
+# Verificar a existencia dos arquivos
+print(front.download_html(back.existencia_arquivos(dict_urls)))
+
+'''Montar o html geral com todos os fragmentos'''
