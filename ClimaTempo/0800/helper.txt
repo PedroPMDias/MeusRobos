@@ -1,8 +1,0 @@
-Toda vez que eu iniciar o programa ele vai gerar um arquivo com
-todos os dados do clima no prazo de 7 dias, contando o dia da execução, 
-e uma previsão curta para os próximos 7 dias, num total de 14 dias.
-
-Primeiro, a classe A vai baixar todos os arquivos necessários para a 
-construção do arquivo geral, retornando o caminho completo do arquivo.
-Depois, a classe B vai pegar essa lista de caminhos e vai processá-los
-para obter os dados específicos e montar o arquivo final.
