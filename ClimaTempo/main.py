@@ -1,6 +1,5 @@
-# Importação das bibliotecas
-from API.robot import Backend
+from API.Robot import ClimaTempo
+C_T = ClimaTempo("Colombo/PR")
 
-back = Backend("Colombo/PR")
-
-print(back.requisitor())
+from pprint import pprint
+pprint(C_T.links_Servidor())
