@@ -56,6 +56,20 @@ class ClimaTempo(Web):
         self.__dir_Downloads = self.__dir_Previsoes + '/' + self.__localizacao + '/'
         Web.__init__(self, self.__localizacao)
 
+    def __procurarArquivos(self, arquivos):
+        for nome, link in arquivos.items():
+            if not os.path.exists(nome):
+                with open(nome, 'w', encoding='utf-8') as arqPrevisao:
+                    """
+                    AttributeError: type object 'Web' has no attribute '_ClimaTempo__abrirUrl'
+                    Robot.py, line 67
+                    """
+                    pgnPrevisao = Web.__abrirUrl(link)
+                    arq = arqPrevisao.write(pgnPrevisao)
+                    print(f"\n{arq} - {nome} salvo com sucesso!")
+            else:
+                print(f"\n{nome} ja esta no servidor")
+
     def _trocarJson(self, localJson, stepJson={}):
         if not os.path.exists(self.__dir_Downloads):
             os.makedirs(self.__dir_Downloads, exist_ok=True)
@@ -66,7 +80,7 @@ class ClimaTempo(Web):
 
         with open(self.__historico, 'w', encoding='utf-8') as local:
             json.dump(novoJson, local, indent=4, ensure_ascii=False)
-        return novoJson
+        return self.__procurarArquivos(novoJson)
 
     def links_Servidor(self):
         with open(self.__historico, 'r', encoding='utf-8') as arquivo:
@@ -75,6 +89,7 @@ class ClimaTempo(Web):
                 chaves = leitura[self.__localizacao]
             except KeyError as key:
                 print(key, "nao estava no Json. Vou pegar na internet.")
-                return self._trocarJson(self._links_Internet())
+                webLinks = self._links_Internet()
+                return self._trocarJson(webLinks)
             else:
-                return chaves
+                return self.__procurarArquivos(chaves)
